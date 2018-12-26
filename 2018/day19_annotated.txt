@@ -1,0 +1,55 @@
+r0 i = 0
+r1 j = 0
+r3 k = 0
+r4 n = 0
+r5 p = 0
+IP = 0
+-> 00: addi  2 16  2     # IP += 16        <--- jump L17
+L1:
+   01: seti  1  4  1     # j = 1
+L2:
+   02: seti  1  2  4     # n = 1
+L3:
+   03: mulr  1  4  3     # k = j * n
+   04: eqrr  3  5  3     # k = k == p
+   05: addr  3  2  2     # IP = k + IP     <--- jump L7, if k == p
+   06: addi  2  1  2     # IP += 1         <--- jump L8
+L7:
+   07: addr  1  0  0     # i = j + i
+L8:
+   08: addi  4  1  4     # n += 1
+   09: gtrr  4  5  3     # k = n > p
+   10: addr  2  3  2     # IP += k         <--- jump L12, if n > p
+   11: seti  2  7  2     # IP = 2          <--- jump L3
+L12:
+   12: addi  1  1  1     # j += 1
+   13: gtrr  1  5  3     # k = j > p
+   14: addr  3  2  2     # IP = k + IP     <--- jump L16, if j > p
+   15: seti  1  0  2     # IP = 1          <--- jump L2
+L16:
+   16: mulr  2  2  2     # IP *= IP        <--- HALT
+L17:
+   17: addi  5  2  5     # p += 2
+   18: mulr  5  5  5     # p *= p
+   19: mulr  2  5  5     # p = IP * p
+   20: muli  5 11  5     # p *= 11
+   21: addi  3  4  3     # k += 4
+   22: mulr  3  2  3     # k *= IP
+   23: addi  3  7  3     # k += 7
+   24: addr  5  3  5     # p += k
+   25: addr  2  0  2     # IP += i         <--- jump ???
+   26: seti  0  1  2     # IP = 0          <--- jump L1
+   27: setr  2  1  3     # k = IP
+   28: mulr  3  2  3     # k *= IP
+   29: addr  2  3  3     # k = IP + k
+   30: mulr  2  3  3     # k = IP * k
+   31: muli  3 14  3     # k *= 14
+   32: mulr  3  2  3     # k *= IP
+   33: addr  5  3  5     # p += k
+   34: seti  0  9  0     # i = 0
+   35: seti  0  8  2     # IP = 0          <--- jump L1
+
+   for j in 1..p
+     for n in 1..p
+       if j * n == p
+         i += j        <-- sum of p divisors
