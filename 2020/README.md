@@ -1,3 +1,5 @@
+I have used AOC problems to finally learn Nim. I am impressed with it despite some gotchas.
+
 Day    | Problem                                                         | Notes
 ------ | ---------                                                       | -------------
 1      | [Report Repair](https://adventofcode.com/2020/day/1)            | **Nim.** Slices are easy to read<br>`numbers[1 ..< numbers.len]`<br> `numbers[1 .. numbers.high]`<br> `numbers[1 .. ^1]`<br> coming from other languages backward index operator `^1` takes time to get used to.<br><br> The `for` statement can be used with one or two variables - very nice.<br>`for x in numbers` (items)<br>`for i, x in numbers` (pairs)
@@ -11,7 +13,7 @@ Day    | Problem                                                         | Notes
 9      | [Encoding Error](https://adventofcode.com/2020/day/9)           |
 10     | [Adapter Array](https://adventofcode.com/2020/day/10)           | **Problem**. Part2 - number of paths in a DAG<br> **Nim**. Built-in `CountTable` 🚀
 11     | [Seating System](https://adventofcode.com/2020/day/11)          |
-12     | [Rain Risk](https://adventofcode.com/2020/day/12)               | **Nim**. who needs ternary when you can use case expression
+12     | [Rain Risk](https://adventofcode.com/2020/day/12)               | **Nim**. Who needs ternary operator when you can use case expression
 13     | [Shuttle Search](https://adventofcode.com/2020/day/13)          | **Problem**. Part2 - needs [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
 14     | [Docking Data](https://adventofcode.com/2020/day/14)            | **Nim**. No bult-in `combinatorics` module
 15     | [Rambunctious Recitation](https://adventofcode.com/2020/day/15) | **Problem**. Don't use HashMap where array is sufficient
