@@ -1,0 +1,28 @@
+#lang! en
+
+:ASCII = @["a" .. "z", "A" .. "Z"]
+
+fn priority :item [ :ASCII.index_of :item ]
+
+fn common_item :compartments [
+  :compartments |> map &@set
+                |> foldl \:a :b => [ :a * :b ]
+                |> @list.1
+]
+
+fn part1 :rucksacks [
+  :rucksacks |> map \:r => [ :r |> chunks (:r.size) / 2
+                                |> common_item.priority ]
+             |> sum
+]
+
+fn part2 :rucksacks [
+  :rucksacks |> chunks 3
+             |> map \:r => [ :r.common_item.priority ]
+             |> sum
+]
+
+:rucksacks = "day03.txt".read_file.strip.split "\n"
+
+check :rucksacks.part1 == 7785
+check :rucksacks.part2 == 2633

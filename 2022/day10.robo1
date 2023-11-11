@@ -1,0 +1,43 @@
+#lang! en
+
+struct @cpu_state :cycle :reg_x
+
+fn run :instructions [
+  :result = @[]
+  :cycle = 0
+  :reg_x = 1
+  for :op in :instructions [
+    :cycle.increment
+    :result.add (@cpu_state :cycle :reg_x)
+    if :op.contains "addx" [
+      :cycle.increment
+      :result.add (@cpu_state :cycle :reg_x)
+      :reg_x.increment (:op.slice 5 |> @number)
+    ]
+  ]
+  :result
+]
+
+fn part1 :instructions [
+  :instructions.run |> filter \:x => [ (:x:cycle.remainder 40) == 20 ]
+                    |> map \:x => [ :x:cycle * :x:reg_x ]
+                    |> sum
+]
+
+fn part2 :instructions [
+  :line = ""
+  for (:cycle, :reg_x) in :instructions.run [
+    :col = (:cycle - 1).remainder 40
+    :diff = :reg_x - :col
+    :line = :line + (:diff.abs < 2 and "\u2588" or " ")
+    if (:cycle.remainder 40) == 0 [
+      print :line
+      :line = ""
+    ]
+  ]
+]
+
+:instructions = "day10.txt".read_file.split "\n"
+
+check :instructions.part1 == 12_460
+:instructions.part2

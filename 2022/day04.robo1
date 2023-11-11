@@ -1,0 +1,19 @@
+#lang! en
+
+fn part1 :xs [
+  :xs |> filter \:x => [ (:x.1 <= :x.3 and :x.2 >= :x.4) or
+                         (:x.1 >= :x.3 and :x.2 <= :x.4) ]
+      |> size
+]
+
+fn part2 :xs [
+  :xs |> filter \:x => [ :x.1 <= :x.4 and :x.2 >= :x.3 ]
+      |> size
+]
+
+:xs = "day04.txt" |> read_file
+                  |> strip.split "\n"
+                  |> map \:x => [ :x.find_all @r"\d+" |> map &@number ]
+
+check :xs.part1 == 580
+check :xs.part2 == 895

@@ -1,0 +1,20 @@
+#lang! en
+
+fn part1 :signal :marker_size? = 4 [
+  for :start :_ in :signal [
+    :end = :start + :marker_size - 1
+    :marker = :signal.slice :start :end
+    if :marker.@set.size == :marker_size [
+      return :end
+    ]
+  ]
+]
+
+fn part2 :signal [
+  :signal.part1 14
+]
+
+:signal = "day06.txt".read_file
+
+check :signal.part1 == 1929
+check :signal.part2 == 3298

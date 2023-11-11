@@ -1,0 +1,57 @@
+#lang! en
+
+struct @monkey :items :operation :divisor :throw_to :inspections
+
+fn eval :operation :item [
+  :arg2 = :operation.replace "old" (:item.@string) |> slice 2 |> @number
+  when [
+    :operation.contains "+" [ :item + :arg2 ]
+    else                    [ :item * :arg2 ]
+  ]
+]
+
+fn run :monkeys :rounds :reduce_item [
+  repeat :rounds [
+    for :m in :monkeys [
+      for :item in :m:items [
+        :m:inspections.increment
+        :new = :reduce_item.call (eval :m:operation :item)
+        :to = 1 + sign (:new.remainder :m:divisor)
+        :next_monkey = :monkeys.[(:m:throw_to.[:to])]
+        :next_monkey:items.add :new
+      ]
+      :m:items = @[]
+    ]
+  ]
+  :monkeys |> map \:m => [ :m:inspections ]
+           |> sort
+           |> slice -2
+           |> product
+]
+
+fn part1 :monkeys [
+  :monkeys.run 20 \:x => [ :x.quotient 3 ]
+]
+
+fn part2 :monkeys [
+  :lcm = :monkeys |> map \:x => [ :x:divisor ] |> product
+  :monkeys.run 10_000 \:x => [ :x.remainder :lcm ]
+]
+
+fn numbers :str [ :str.find_all @r"-?\d+" |> map &@number ]
+
+fn parse :text [
+  :text.split "\n\n" |> map \:m => [
+    :lines = :m.split "\n"
+    :items = :lines.2.numbers
+    :operation = :lines.3.split "new = old" |> \:xs => [ :xs.2.strip ]
+    :divisor = :lines.4.numbers.1
+    :throw_to = @(:lines.5.numbers.1 + 1, :lines.6.numbers.1 + 1)
+    @monkey :items :operation :divisor :throw_to 0
+  ]
+]
+
+:monkeys = "day11.txt".read_file.parse
+
+check :monkeys.clone.part1 == 107_822
+check :monkeys.part2       == 27_267_163_742

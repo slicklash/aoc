@@ -1,0 +1,40 @@
+#lang! en
+
+fn part1 :stacks :moves :n? = 0 [
+  for (:count, :src, :dest) in :moves [
+    :pos = 1
+    repeat :count [
+      :crate = :stacks.[:src].1
+      :stacks.[:dest].insert_at :pos :crate
+      :stacks.[:src].remove_at 1
+      :pos = :pos + :n
+    ]
+  ]
+  1 .. (:stacks.size) |> map \:x => [ :stacks.[:x].1 ] |> join
+]
+
+fn part2 :stacks :moves [
+  part1 :stacks :moves 1
+]
+
+fn parse :s [
+  :xs = :s.split "\n\n"
+  :crates = :xs.1.split "\n"
+  :moves = :xs.2 |> strip.split "\n"
+                 |> map \:x => [ :x.find_all @r"\d+" |> map &@number ]
+  :stacks = @[1 .. 9].zipmap @[@[]] * 9
+  for :x in :crates [
+    for :i :chunk in :x.chunks 4 [
+      :crate = :chunk.find @r"[A-Z]"
+      if :crate [
+        :stacks.[:i].add (:crate)
+      ]
+    ]
+  ]
+  @(:stacks, :moves)
+]
+
+(:stacks, :moves) = "day05.txt".read_file.parse
+
+check (:stacks.clone.part1 :moves) == "VCTFTJQCG"
+check (:stacks.part2       :moves) == "GCFGLDNJZ"

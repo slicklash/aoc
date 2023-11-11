@@ -1,0 +1,18 @@
+#lang! en
+
+fn part1 :rounds [
+  :scores = "B X|C Y|A Z|A X|B Y|C Z|C X|A Y|B Z".split "|"
+  :rounds |> map \:x => [ :scores.index_of :x ]
+          |> sum
+]
+
+fn part2 :rounds [
+  :scores = "B X|C X|A X|A Y|B Y|C Y|C Z|A Z|B Z".split "|"
+  :rounds |> map \:x => [ :scores.index_of :x ]
+          |> sum
+]
+
+:rounds = "day02.txt".read_file.split "\n"
+
+check :rounds.part1 == 10_816
+check :rounds.part2 == 11_657

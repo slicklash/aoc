@@ -1,0 +1,64 @@
+#lang! en
+
+struct @point :x :y
+struct @grid :tiles :width :height
+
+:DIRECTION_DELTAS = @[@(-1, 0), @(1, 0), @(0, -1), @(0, 1)]
+
+fn visible_trees :grid :tree_pos :tree_height :delta [
+  :result = @[]
+  (:dx, :dy) = :delta
+  :pos = @point (:tree_pos:x + :dx) (:tree_pos:y + :dy)
+  while :grid:tiles.contains :pos [
+    :height = :grid:tiles.[:pos]
+    :result.add :height
+    if :height >= :tree_height [ break ]
+    :pos = @point (:pos:x + :dx) (:pos:y + :dy)
+  ]
+  :result
+]
+
+fn part1 :grid [
+  :result = :grid:height * 2 + (:grid:width - 2) * 2
+  for :y in 2 .. (:grid:height - 1) [
+    for :x in 2 .. (:grid:width - 1) [
+      :pos = @point :x :y
+      :height = :grid:tiles.[:pos]
+      for :delta in :DIRECTION_DELTAS [
+        :is_visible = :grid.visible_trees :pos :height :delta |> all \:h => [ :h < :height ]
+        if :is_visible [
+          :result.increment
+          break
+        ]
+      ]
+    ]
+  ]
+  :result
+]
+
+fn part2 :grid [
+  :grid:tiles |> map \:pos :height => [
+     :DIRECTION_DELTAS |> map \:delta => [ :grid |> visible_trees :pos :height :delta
+                                                 |> size ]
+                       |> product
+  ] |> max
+]
+
+fn parse :text [
+  :lines = :text.strip.split "\n"
+  :width = :lines.1.size
+  :height = :lines.size
+  :tiles = @[=]
+  for :x in 1 .. :width [
+    for :y in 1 .. :height [
+      :h = :lines.[:y].[:x].@number
+      :tiles.add (@point :x :y) :h
+    ]
+  ]
+  @grid :tiles :width :height
+]
+
+:grid = "day08.txt".read_file.parse
+
+check :grid.part1 == 1832
+check :grid.part2 == 157_320

@@ -1,0 +1,20 @@
+#lang! en
+
+fn part1 :elves [
+  :elves.max
+]
+
+fn part2 :elves [
+  :elves |> sort
+         |> slice -3 -1
+         |> sum
+]
+
+:elves = "day01.txt" |> read_file
+                     |> split "\n\n"
+                     |> map \:x => [ :x |> split "\n"
+                                        |> map &@number
+                                        |> sum ]
+
+check :elves.part1 == 70_296
+check :elves.part2 == 20_5381

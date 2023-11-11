@@ -11,3 +11,5 @@ My solutions for Advent of Code.
 [2020](https://github.com/slicklash/aoc/tree/master/2020) Nim
 
 [2021](https://github.com/slicklash/aoc/tree/master/2021) Nim
+
+[2022](https://github.com/slicklash/aoc/tree/master/2022) [ROBO1](https://robo1.lt/en/reference/robo1-language/)

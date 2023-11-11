@@ -1,0 +1,42 @@
+#lang! en
+
+struct @directory :size :parent
+
+fn part1 :dir_sizes [
+  :dir_sizes |> filter \:x => [ :x <= 100_000 ]
+             |> sum
+]
+
+fn part2 :dir_sizes [
+  :free = 70_000_000 - :dir_sizes.1
+  :dir_sizes |> filter \:x => [ :x + :free >= 30_000_000 ]
+             |> min
+]
+
+fn parse :text [
+  :dirs = @[]
+  :current_dir = @nothing
+  for :line in :text.split "\n" [
+    when [
+      :line.contains "$ cd .." [ :current_dir = :current_dir:parent ]
+      :line.contains "$ cd " [
+        :current_dir = @directory 0 :current_dir
+        :dirs.add :current_dir
+      ]
+      else [
+        :size = :line.find @r"\d+"
+        :dir = :current_dir
+        while :size and :dir [
+          :dir:size.increment (:size.@number)
+          :dir = :dir:parent
+        ]
+      ]
+    ]
+  ]
+  :dirs.map \:d => [ :d:size ]
+]
+
+:dir_sizes = "day07.txt".read_file.parse
+
+check :dir_sizes.part1 == 1_845_346
+check :dir_sizes.part2 == 3_636_703

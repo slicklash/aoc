@@ -1,0 +1,40 @@
+#lang! en
+
+struct @point :x :y
+
+:DIRECTION_DELTAS = @["R" = @(1, 0), "L" = @(-1, 0), "U" = @(0, -1), "D" = @(0, 1)]
+
+fn distance :x1 :y1 :x2 :y2 [
+  max @[(:x1 - :x2).abs, (:y1 - :y2).abs]
+]
+
+fn part1 :motions :length? = 2 [
+  :rope = @[@point 0 0] * :length
+  :seen = :rope.@set
+  for (:dir, :steps) in :motions [
+    (:dx, :dy) = :DIRECTION_DELTAS.[:dir]
+    repeat :steps [
+      :head = :rope.1
+      :rope.update 1 @point (:head:x + :dx) (:head:y + :dy)
+      for :i in 2 .. :length [
+        (:prev_x, :prev_y) = :rope.[:i - 1]
+        (:curr_x, :curr_y) = :rope.[:i]
+        while (distance :prev_x :prev_y :curr_x :curr_y) > 1 [
+          :curr_x = :curr_x + sign (:prev_x - :curr_x)
+          :curr_y = :curr_y + sign (:prev_y - :curr_y)
+        ]
+        :rope.update :i @point :curr_x :curr_y
+      ]
+      :seen.add (:rope.-1)
+    ]
+  ]
+  :seen.size
+]
+
+fn part2 :motions [ :motions.part1 10 ]
+
+:motions = "day09.txt" |> read_file.strip.split "\n"
+                       |> map \:x => [ @(:x.1, :x.slice 3 |> @number) ]
+
+check :motions.part1 == 6090
+check :motions.part2 == 2566
